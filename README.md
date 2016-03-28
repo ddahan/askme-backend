@@ -18,7 +18,7 @@ Apply manually each command in your shell.
 - Activate the virtual environment created by the script :
 `source ~/amvenv/bin/activate`
 
-- Install the python requirements for your project:
+- Go to project folder (/vagrant/project-folder) and install the python requirements for the project:
 `pip install -r requirements.txt`
 
 - Go to the root project directory and run `pip install -r requirements.txt`
