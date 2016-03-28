@@ -6,9 +6,10 @@
 - Create a folder named "askme_vagrant"
 - Clone the project git repository inside this folder
 - Copy config/bootstrap.sh and config/Vagrantfile into askme_vagrant
-- Run `vagrant up`
+- Run `vagrant up` : this should create a virtual machine and install all system
+dependencies required to run the development server, according to bootstrap.sh
 
-This should create a virtual machine and install all system dependencies required to run the development server.
+- Once done, ssh to the vm with `vagrant ssh`
 
 - Now we need to create a database to work on.
 There is a set of commands in project/config/init_postgresql.txt.
