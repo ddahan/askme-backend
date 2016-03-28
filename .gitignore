@@ -4,3 +4,4 @@ amvenv
 *.log
 *.DS_Store
 local_settings.py
+*.sqlite3
