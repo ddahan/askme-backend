@@ -4,24 +4,40 @@
 # First system update
 sudo apt-get update
 
+echo "#########################################################################"
 echo "INSTALLING ESSENTIALS"
+echo "#########################################################################"
+
 # Git install and configuration
 sudo apt-get -y install git
 git config --global core.autocrlf true
 
+echo "#########################################################################"
 echo "CONFIGURING UTF-8 SYSTEM-WIDE" # http://perlgeek.de/en/article/set-up-a-clean-utf8-environment
-echo "export LC_ALL=en_US.UTF-8" > ~/.bashrc
-echo "export LANG=en_US.UTF-8" > ~/.bashrc
-echo "export LANGUAGE=en_US.UTF-8" > ~/.bashrc
+echo "#########################################################################"
 
+echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
+echo "export LANG=en_US.UTF-8" >> ~/.bashrc
+echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
+source ~/.bashrc
+
+echo "#########################################################################"
 echo "INSTALLING POSTGRESQL"
+echo "#########################################################################"
+
 sudo apt-get -y install postgresql
 sudo apt-get -y install libpq-dev
 
+echo "#########################################################################"
 echo "INSTALLING PYTHON TOOLS"
+echo "#########################################################################"
+
 # Note that Python3.4 is already installed
 sudo apt-get -y install python3-pip
 sudo apt-get install python3.4-venv
 
-echo "CREATING A VIRTUALENV ENVIRONMENT AND ACTIVATE IT"
+echo "#########################################################################"
+echo "CREATING A VIRTUALENV ENVIRONMENT"
+echo "#########################################################################"
+
 python3 -m venv amvenv
