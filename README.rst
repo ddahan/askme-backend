@@ -1,1 +1,25 @@
-# askme-backend
+# Askme backend
+
+## Deployment with Vagrant :
+
+- Install vagrant and virtual box on your computer.
+- Create a folder named "askme_vagrant"
+- Clone the project git repository inside this folder
+- Copy config/bootstrap.sh and config/Vagrantfile into askme_vagrant
+- Run `vagrant up`
+
+This should create a virtual machine and install all system dependencies required to run the development server.
+
+- Now we need to create a database to work on.
+There is a set of commands in project/config/init_postgresql.txt.
+Apply manually each command in your shell.
+
+- Activate the virtual environment created by the script :
+`source ~/amvenv/bin/activate`
+
+- Install the python requirements for your project:
+`pip install -r requirements.txt`
+
+- Go to the root project directory and run `pip install -r requirements.txt`
+
+- Create and fill your own `.env` file, following the `.env.example` example in project root directory.

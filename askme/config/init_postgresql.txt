@@ -1,0 +1,10 @@
+
+# Should be run manually, su as postgres user and create database and tables.
+
+sudo su postgres
+
+psql -c "CREATE USER root;"
+psql -c "ALTER ROLE root WITH CREATEDB;"
+psql -c "CREATE DATABASE askmedb OWNER root;"
+psql -c "ALTER USER root WITH ENCRYPTED PASSWORD 'askmeroot';"
+exit
