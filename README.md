@@ -11,11 +11,20 @@ dependencies required to run the development server, according to bootstrap.sh
 
 - Once done, ssh to the vm with `vagrant ssh`
 
+- Configure UTF-8 system wide (seems to be inneficient when scripted)
+```
+echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
+echo "export LANG=en_US.UTF-8" >> ~/.bashrc
+echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
+source ~/.bashrc
+```
+
 - Now we need to create a database to work on.
 There is a set of commands in project/config/init_postgresql.txt.
 Apply manually each command in your shell.
 
-- Activate the virtual environment created by the script :
+- Create and activate the virtual environment:
+`python3 -m venv amvenv`
 `source ~/amvenv/bin/activate`
 
 - Go to project folder (/vagrant/project-folder) and install the python requirements for the project:
