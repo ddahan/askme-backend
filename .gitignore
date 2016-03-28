@@ -1,0 +1,6 @@
+amvenv
+*.pyc
+.env
+*.log
+*.DS_Store
+local_settings.py
