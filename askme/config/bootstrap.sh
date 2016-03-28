@@ -9,18 +9,19 @@ echo "INSTALLING ESSENTIALS"
 sudo apt-get -y install git
 git config --global core.autocrlf true
 
+echo "CONFIGURING UTF-8 SYSTEM-WIDE" # http://perlgeek.de/en/article/set-up-a-clean-utf8-environment
+echo "export LC_ALL=en_US.UTF-8" > ~/.bashrc
+echo "export LANG=en_US.UTF-8" > ~/.bashrc
+echo "export LANGUAGE=en_US.UTF-8" > ~/.bashrc
+
 echo "INSTALLING POSTGRESQL"
 sudo apt-get -y install postgresql
 sudo apt-get -y install libpq-dev
 
 echo "INSTALLING PYTHON TOOLS"
-sudo apt-get install python3.5
-sudo apt-get -y install python-setuptools python-dev build-essential
-
-echo "INSTALLING VIRTUALENV"
-yes | easy_install pip
-yes | pip install --upgrade virtualenv
+# Note that Python3.4 is already installed
+sudo apt-get -y install python3-pip
+sudo apt-get install python3.4-venv
 
 echo "CREATING A VIRTUALENV ENVIRONMENT AND ACTIVATE IT"
-/usr/local/bin/python3.5 -m venv amvenv
-source ~/amvenv/bin/activate
+python3 -m venv amvenv
