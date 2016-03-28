@@ -21,6 +21,8 @@ echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 source ~/.bashrc
 
+# WARN : seems to be inneficient when run in bootstrap.sh but works manually
+
 echo "#########################################################################"
 echo "INSTALLING POSTGRESQL"
 echo "#########################################################################"
@@ -40,4 +42,4 @@ echo "#########################################################################"
 echo "CREATING A VIRTUALENV ENVIRONMENT"
 echo "#########################################################################"
 
-python3 -m venv amvenv
+python3 -m venv amvenv # WARN : check write rights
