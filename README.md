@@ -1,11 +1,11 @@
-# Askme backend
+# Freelancio backend
 
 ## Deployment with Vagrant :
 
 - Install vagrant and virtual box on your computer.
-- Create a folder named "askme_vagrant"
+- Create a folder named "xxxxxx_vagrant"
 - Clone the project git repository inside this folder
-- Copy config/bootstrap.sh and config/Vagrantfile into askme_vagrant
+- Copy config/bootstrap.sh and config/Vagrantfile into xxxxxx_vagrant
 - Run `vagrant up` : this should create a virtual machine and install all system
 dependencies required to run the development server, according to bootstrap.sh
 
