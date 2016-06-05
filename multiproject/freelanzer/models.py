@@ -1,7 +1,7 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
 
 
 class BankAccount(models.Model):
@@ -39,9 +39,9 @@ class Company(models.Model):
         (SASU, 'Société par actions simplifiée unipersonnelle'),
     )
 
-    name = models.CharField(_("Nom"), blank=True)  # Si auto-entrepreneur
-    type = models.CharField(_("Type"), choices=COMPANY_TYPE_CHOICES)
-    logo = models.CharField(_("URL du logo"))
+    name = models.CharField(_("Nom"), max_length=256, blank=True)  # Si auto-entrepreneur
+    type = models.CharField(_("Type"), max_length=256, choices=COMPANY_TYPE_CHOICES)
+    logo = models.CharField(_("URL du logo"), max_length=1024)
     address = models.CharField(_("Adresse"), max_length=1024)
     siret = models.CharField(_("SIRET"), max_length=256)
     siren = models.CharField(_("SIREN"), max_length=256)
@@ -56,7 +56,7 @@ class Freelance(models.Model):
     Freelance
     """
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     company = models.ForeignKey(Company, null=True, blank=True)
 
     def __str__(self):
@@ -68,7 +68,7 @@ class Client(models.Model):
     Client
     """
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     company = models.ForeignKey(Company)
 
     def __str__(self):
@@ -146,16 +146,6 @@ class ClauseInContract(models.Model):
     index = models.PositiveSmallIntegerField(_("Ordre"))
 
 
-class ClauseInInvoice(models.Model):
-    """
-    Table de liaison M2M entre une Clause et une Invoice
-    """
-
-    invoice = models.ForeignKey(Invoice)
-    clause = models.ForeignKey(Clause)
-    index = models.PositiveSmallIntegerField(_("Ordre"))
-
-
 class Invoice(models.Model):
     """
     Facture
@@ -176,7 +166,7 @@ class Invoice(models.Model):
     mission = models.ForeignKey(Mission)
     identifier = models.CharField(_("Numéro"), max_length=256, unique=True)
     issue_date = models.DateField(_("Date d'émission"), default=timezone.now)
-    payment_mode = models.CharField(_("Mode de règlement"), blank=True, null=True)
+    payment_mode = models.CharField(_("Mode de règlement"), max_length=256, blank=True, null=True)
     payment_date = models.DateField(_("Date de réglement"), blank=True, null=True)
     price_excluding_taxes = models.DecimalField(_("Prix HT"), max_digits=8, decimal_places=2)
     price_taxes = models.DecimalField(_("TVA"), max_digits=8, decimal_places=2)
@@ -187,6 +177,16 @@ class Invoice(models.Model):
 
     def __str__(self):
         return "{} - {} ({})".format(self.identifier, self.mission, self.issue_date)
+
+
+class ClauseInInvoice(models.Model):
+    """
+    Table de liaison M2M entre une Clause et une Invoice
+    """
+
+    invoice = models.ForeignKey(Invoice)
+    clause = models.ForeignKey(Clause)
+    index = models.PositiveSmallIntegerField(_("Ordre"))
 
 
 class Incident(models.Model):

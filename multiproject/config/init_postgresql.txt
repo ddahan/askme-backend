@@ -5,6 +5,6 @@ sudo su postgres
 
 psql -c "CREATE USER root;"
 psql -c "ALTER ROLE root WITH CREATEDB;"
-psql -c "CREATE DATABASE askmedb OWNER root;"
-psql -c "ALTER USER root WITH ENCRYPTED PASSWORD 'askmeroot';"
+psql -c "CREATE DATABASE multi OWNER root;"
+psql -c "ALTER USER root WITH ENCRYPTED PASSWORD 'multiroot';"
 exit
