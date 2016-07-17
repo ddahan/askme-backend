@@ -1,5 +1,3 @@
-# Freelancio backend
-
 ## Deployment with Vagrant :
 
 - Install vagrant and virtual box on your computer.
