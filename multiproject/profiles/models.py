@@ -3,6 +3,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from model_utils.models import TimeStampedModel
 
 
 class CustomUserManager(BaseUserManager):
@@ -65,3 +66,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.first_name
 
+
+class Customer(TimeStampedModel):
+    """
+    Customer
+    """
+    user = models.ForeignKey(User)
