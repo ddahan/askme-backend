@@ -41,8 +41,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_swagger',
     # My apps
+    'core',
     'profiles',
-    'freelanzer',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -91,7 +91,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-US'
+LANGUAGE_CODE = 'fr'
 TIME_ZONE = 'Europe/Paris'
 USE_I18N = True
 USE_L10N = True
