@@ -43,10 +43,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     AbstractBaseUser provides the core implementation of a User model.
     """
 
-    class Meta:
-        verbose_name = _("Utilisateur")
-        verbose_name_plural = _("Utilisateurs")
-
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     email = models.EmailField(unique=True, null=False)
@@ -76,8 +72,4 @@ class Customer(TimeStampedModel):
     Customer
     """
 
-    class Meta:
-        verbose_name = "Client"
-        verbose_name_plural = "Clients"
-
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, help_text=_("utilisateur"))

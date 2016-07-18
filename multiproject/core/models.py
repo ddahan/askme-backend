@@ -38,20 +38,31 @@ class Organization(TimeStampedModel):
     logo = models.FilePathField(path="/some/path/where/logos/will/be", blank=True)
 
 
-class Position(TimeStampedModel):
+class Format(TimeStampedModel):
     """
-    Position
+    Format (could be a choicefield instead of a pk?)
     """
-    value = models.CharField(_("Position"), max_length=1024, unique=True)  # How to represent it?
+    name = models.CharField(_("Nom"), max_length=256)  # ex: "Format A4"
+    slug = models.CharField(_("Slug"), max_length=256)  # ex : "FORMAT_A4"
+
+
+class Zone(TimeStampedModel):
+    """
+    Determine how to geographically place a bunch of data
+    """
+    related_format = models.ForeignKey(Format)
+    margins = models.FloatField()
+    # min height, max height
 
 
 class FieldType(TimeStampedModel):
     """
     Field (ex: Nom, Prénom, Numéro de téléphone, numéro d'abonné).
     Certains sont génériques, d'autres spécifiques
+    Certains sont juste des champs à remplir, d'autres des choix multiples
     """
 
-    # TODO : does not handle boolean fields
+    # WARN : does not handle boolean fields / multichoice fields
 
     CHARFIELD = 'CHARFIELD'
     TEXTAREA = 'TEXTAREA'
@@ -64,30 +75,15 @@ class FieldType(TimeStampedModel):
     name = models.CharField(_("Nom"), max_length=256)
     description = models.CharField(_("Description (aide)"), max_length=2048)
     default_value = models.CharField(_("Valeur par défaut"), max_length=2048)
-    max_length = models.PositiveIntegerField(default=2048)
+    max_size = models.PositiveIntegerField(default=2048)
     widget = models.CharField(choices=WIDGET_CHOICES, max_length=256)  # Use generic fk instead?
-
-
-class DuetFieldPos(TimeStampedModel):
-    """
-    Duet : couples de pk de fields et de positions associées
-    """
-
-    field = models.ForeignKey(FieldType)
-    positions = models.ManyToManyField(Position)
 
 
 class LetterType(TimeStampedModel):
     """
     Letter Type. Ex: Résiliation abonnement téléphonique SFR
+    Content is N ZoneTextDuet
     """
-
-    # Template Formats
-    FORMAT_A4 = 'A4'
-
-    PAGE_FORMAT_CHOICES = (
-        (FORMAT_A4, 'Format A4'),
-    )
 
     # Letter Purposes
     RESILIATION = 'RESILIATION'
@@ -100,26 +96,30 @@ class LetterType(TimeStampedModel):
         (OTHER, 'Autre'),
     )
 
-    content = models.TextField(_("Contenu"))  # With {field-name} to be replaced when generation is processed
-    # TODO: does not work because content is related to a position
-
     description = models.CharField(_("Description"), max_length=1024)
     purpose = models.CharField(choices=PURPOSE_CHOICES, max_length=256)
     organization = models.ForeignKey(Organization)
     url = models.CharField(_("Site officiel"), blank=True, max_length=2048)
-    sheet_format = models.CharField(choices=PAGE_FORMAT_CHOICES, max_length=256)
-    uploader = models.ForeignKey(Customer, blank=True, null=True)  # If this letter type has been created by a customer
+    uploader = models.ForeignKey(Customer, blank=True, null=True)  # If created by a customer
     default_to_address = models.ForeignKey(Address, help_text=_("Adresse du destinataire"))
+    sheet_format = models.ForeignKey(Format)
+
+
+class ZoneTextDuet(TimeStampedModel):
+    """
+    ZoneTextDuet
+    """
+    zone = models.ForeignKey(Zone)
+    text_to_fill = models.TextField()  # ex: "Je soussigné {first_name} {last_name}"
+    letter_type = models.ForeignKey(LetterType)
 
 
 class FieldInfo(TimeStampedModel):
     """
     FieldInfo, related to a letter type.
     """
-    letter_type = models.ForeignKey(LetterType)
-    # Field data
-    field_pos = models.ForeignKey(DuetFieldPos)
-    index = models.PositiveSmallIntegerField(_("Ordre d'affichage dans le formulaire"))
+    zone_text_duet = models.ForeignKey(ZoneTextDuet)
+    # index = models.PositiveSmallIntegerField(_("Ordre d'affichage dans le formulaire")) -> no need
     # Field Font infos
     size = models.PositiveSmallIntegerField(_("Taille de la police"), default=12)
     font = models.CharField(_("Police d'écriture"), max_length=256)
@@ -127,7 +127,7 @@ class FieldInfo(TimeStampedModel):
 
 class Letter(TimeStampedModel):
     """
-    Actual letter which uses a lettertype
+    Actual letter instance which uses a lettertype
     """
     letter_type = models.ForeignKey(LetterType)
     # We can get all the related values, calling self.field_set

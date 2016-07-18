@@ -7,3 +7,4 @@ local_settings.py
 *.sqlite3
 .idea/
 *migrations/
+*output/
