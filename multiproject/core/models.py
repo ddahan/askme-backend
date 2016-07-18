@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
 
-from profiles.models import Customer  # Should not be redlined, works well.
+from profiles.models import Customer
 
 
 class Address(TimeStampedModel):
@@ -100,12 +100,14 @@ class LetterType(TimeStampedModel):
         (OTHER, 'Autre'),
     )
 
+    content = models.TextField(_("Contenu"))  # With {field-name} to be replaced when generation is processed
+    # TODO: does not work because content is related to a position
+
     description = models.CharField(_("Description"), max_length=1024)
-    purpose = models.CharField(choices=PURPOSE_CHOICES, max_length=256)  # could be a FK to a model?
+    purpose = models.CharField(choices=PURPOSE_CHOICES, max_length=256)
     organization = models.ForeignKey(Organization)
     url = models.CharField(_("Site officiel"), blank=True, max_length=2048)
     sheet_format = models.CharField(choices=PAGE_FORMAT_CHOICES, max_length=256)
-    # TODO: text inside with information to be filled : {field-name}
     uploader = models.ForeignKey(Customer, blank=True, null=True)  # If this letter type has been created by a customer
     default_to_address = models.ForeignKey(Address, help_text=_("Adresse du destinataire"))
 
