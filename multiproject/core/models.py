@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
 
@@ -28,12 +29,6 @@ from profiles.models import Customer
 #         """
 #         return  # FIXME
 
-class Address(TimeStampedModel):
-    """
-    TOCHECK: do we need to have a structured format? (more complicated to handle)
-    """
-    text = models.TextField()
-
 
 class Organization(TimeStampedModel):
     """
@@ -43,22 +38,8 @@ class Organization(TimeStampedModel):
     website = models.CharField(_("Site officiel"), blank=True, max_length=2048)
     logo = models.FilePathField(path="/some/path/where/logos/will/be", blank=True)
 
-
-class Format(TimeStampedModel):
-    """
-    Format (could be a choicefield instead of a pk?)
-    """
-    name = models.CharField(_("Nom"), max_length=256)  # ex: "Format A4"
-    slug = models.CharField(_("Slug"), max_length=256)  # ex : "FORMAT_A4"
-
-
-class Zone(TimeStampedModel):
-    """
-    Determine how to geographically place a bunch of data
-    """
-    related_format = models.ForeignKey(Format)
-    margins = models.FloatField()
-    # min height, max height
+    def __str__(self):
+        return self.name
 
 
 class Field(TimeStampedModel):
@@ -67,8 +48,6 @@ class Field(TimeStampedModel):
     Certains sont génériques, d'autres spécifiques
     Certains sont juste des champs à remplir, d'autres des choix multiples
     """
-
-    # WARN : does not handle boolean fields / multichoice fields
 
     SHORT_TEXT = 'SHORT_TEXT'
     LONG_TEXT = 'LONG_TEXT'
@@ -90,13 +69,25 @@ class Field(TimeStampedModel):
         (DATETIME, 'DateTime'),
     )
 
-    name = models.CharField(_("Nom"), max_length=256)
+    name = models.CharField(_("Nom"), max_length=128)
+    slug = models.SlugField(_("Slug"), max_length=128)
     description = models.CharField(_("Description (aide)"), blank=True, null=False, max_length=2048)
     default_value = models.CharField(_("Défaut"), blank=True, null=False, max_length=2048)
     # For simple/multiple choices only. Separeted by semicolons
     choices = models.TextField(_("Choix"), blank=True, null=False)
     max_size = models.PositiveIntegerField(default=2048)
     field_type = models.CharField(choices=FIELD_TYPE_CHOICES, max_length=256)
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.get_field_type_display())
+
+    def save(self, *args, **kwargs):
+        """
+        Create a default slug based on the field name
+        """
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Field, self).save(*args, **kwargs)
 
 
 class LetterType(TimeStampedModel):
@@ -117,22 +108,16 @@ class LetterType(TimeStampedModel):
     )
 
     fields = models.ManyToManyField(Field)
+    html_template = models.FilePathField(path='html_templates/', recursive=True, max_length=1024)
     organization = models.ForeignKey(Organization)
     uploader = models.ForeignKey(Customer, blank=True, null=True)  # If created by a customer
-    default_to_address = models.ForeignKey(Address, verbose_name=_("Adresse du destinataire"))
-    sheet_format = models.ForeignKey(Format)
+    default_to_address = models.CharField(_("Adresse du destinataire"), max_length=1024)
     description = models.CharField(_("Description"), max_length=1024)
     purpose = models.CharField(choices=PURPOSE_CHOICES, max_length=256)
     url = models.CharField(_("Site officiel"), blank=True, max_length=2048)
 
-
-class ZoneText(TimeStampedModel):
-    """
-    ZoneTextDuet
-    """
-    zone = models.ForeignKey(Zone)
-    text_to_fill = models.TextField()  # ex: "Je soussigné {first_name} {last_name}"
-    letter_type = models.ForeignKey(LetterType)
+    def __str__(self):
+        return self.description
 
 
 class Letter(TimeStampedModel):
@@ -142,6 +127,9 @@ class Letter(TimeStampedModel):
     letter_type = models.ForeignKey(LetterType)
     # We can get all the related values, calling self.field_set
     creator = models.ForeignKey(Customer)
+
+    def __str__(self):
+        return 'Letter #{}, sent by {}'.format(self.pk, self.creator)
 
 
 class FieldValue(TimeStampedModel):
@@ -180,8 +168,8 @@ class Dispatch(TimeStampedModel):
     )
 
     letter = models.ForeignKey(Letter)
-    from_address = models.ForeignKey(Address, related_name="from_dispatch", blank=True, null=True)  # Will be use with actual sending
-    to_address = models.ForeignKey(Address, related_name="to_dispatch", blank=True, null=True)  # Will be used with actual sending
+    from_address = models.CharField(max_length=1024)
+    to_address = models.CharField(max_length=1024)
     status = models.CharField(choices=STATUS_CHOICES, max_length=128)
 
 

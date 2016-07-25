@@ -46,6 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     phone_number = models.CharField(max_length=30, blank=True)
+    address = models.CharField(max_length=1024, blank=True)
     email = models.EmailField(unique=True, null=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -67,6 +68,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.first_name
 
+    def __str__(self):
+        return self.get_full_name()
+
 
 class Customer(TimeStampedModel):
     """
@@ -74,3 +78,6 @@ class Customer(TimeStampedModel):
     """
 
     user = models.ForeignKey(User, help_text=_("utilisateur"))
+
+    def __str__(self):
+        return self.user.get_full_name()
