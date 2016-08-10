@@ -2,7 +2,6 @@
 # Should be run manually, su as postgres user and create database and tables.
 
 sudo su postgres
-
 psql -c "CREATE USER root;"
 psql -c "ALTER ROLE root WITH CREATEDB;"
 psql -c "CREATE DATABASE multi OWNER root;"

@@ -36,7 +36,7 @@ def init_data():
     field6 = Field.objects.create(name="N° de contrat", default_value="123456789", field_type=Field.SHORT_TEXT)
     field7 = Field.objects.create(name="Logement concerné par la résiliation", field_type=Field.SHORT_TEXT)
     field8 = Field.objects.create(name="Motif de résiliation", field_type=Field.SIMPLE_CHOICE,
-        choices="changement de domicile;")
+        choices="changement de domicile;autre")  # To be updated
 
     # LETTER TYPE 1
 
@@ -56,7 +56,7 @@ def init_data():
     )
     letter_type_1.fields.add(field1, field2, field3, field4, field5)
 
-    # LETTER TYPE 2
+    # LETTER TYPE 2 # Incomplete
 
     organization_2 = Organization.objects.create(
         name="Amaguiz",
@@ -72,7 +72,7 @@ def init_data():
         uploader=None,
         default_to_address="Amaguiz.com\nService Client\nTSA 47717\n35577 Cesson Sevigne CEDEX",
     )
-    letter_type_2.fields.add()
+    letter_type_2.fields.add(field1, field6, field4, field7, field8)
 
 
 
