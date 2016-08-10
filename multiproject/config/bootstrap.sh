@@ -46,6 +46,9 @@ python3 -m venv venv # WARN : check write rights
 sudo chown -R vagrant /vagrant/
 sudo chown -R vagrant /home/vagrant/
 
+# Heroku toolbelt
+sudo wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+
 # Todo manually next
 
 # pip install -r ../requirements/local.txt
