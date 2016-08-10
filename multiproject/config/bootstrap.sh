@@ -10,7 +10,6 @@ echo "#########################################################################"
 
 # Git install and configuration
 sudo apt-get -y install git
-git config --global core.autocrlf true
 
 echo "#########################################################################"
 echo "CONFIGURING UTF-8 SYSTEM-WIDE" # http://perlgeek.de/en/article/set-up-a-clean-utf8-environment
@@ -43,3 +42,12 @@ echo "CREATING A VIRTUALENV ENVIRONMENT"
 echo "#########################################################################"
 
 python3 -m venv venv # WARN : check write rights
+
+sudo chown -R vagrant /vagrant/
+sudo chown -R vagrant /home/vagrant/
+
+# Todo manually next
+
+# pip install -r ../requirements/local.txt
+# Ajouter alias dans .bashrc -> alias hrpm='honcho run python manage.py'
+# Créer data initiale (si nouvelle base)

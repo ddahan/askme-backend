@@ -1,16 +1,26 @@
-from django.contrib.auth.models import Group
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
+from core.models import LetterType, Field
+
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class FieldSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ('pk', 'url', 'email', 'groups')
+        model = Field
+        exclude = ('created', 'modified')
 
 
-class GroupSerializer(serializers.ModelSerializer):
+class ShortLetterTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Group
-        fields = ('pk', 'url', 'name')
+        model = LetterType
+        fields = ('pk', 'purpose', 'description')
+
+
+class DetailedLetterTypeSerializer(serializers.ModelSerializer):
+    fields = FieldSerializer(many=True)
+
+    class Meta:
+        model = LetterType
+        fields = ('pk', 'purpose', 'fields')

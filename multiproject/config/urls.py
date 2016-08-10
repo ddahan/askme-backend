@@ -17,17 +17,17 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls import url, include
 from rest_framework import routers
+from api.views import schema_view
 
 from api import views
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
-
+router.register(r'letter-type', views.LetterTypeViewSet)
+router.register(r'detailed-letter-type', views.DetailedLetterTypeViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # url(r'^swagger/', include('rest_framework_swagger.urls')),
+    url(r'^swagger/', schema_view),
     url(r'^admin/', include(admin.site.urls)),
 ]
