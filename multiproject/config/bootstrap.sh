@@ -52,5 +52,5 @@ sudo wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 # Todo manually next
 
 # pip install -r ../requirements/local.txt
-# Ajouter alias dans .bashrc -> alias hrpm='honcho run python manage.py'
+# Ajouter alias dans .bashrc -> alias hlrpm='heroku local:run python manage.py'
 # Créer data initiale (si nouvelle base)
