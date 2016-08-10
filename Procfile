@@ -1,1 +1,1 @@
-web: gunicorn config.wsgi --log-file -
+web: gunicorn multiproject/config.wsgi --log-file -
